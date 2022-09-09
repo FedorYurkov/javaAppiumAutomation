@@ -14,4 +14,12 @@ public class MainClassTest {
         Assert.assertTrue("Variable class_number != 20", obj.getClassNumber() == 20);
     }
 
+    @Test
+    public void testGetClassString() {
+        MainClass obj = new MainClass();
+        String actual_string = obj.getClassString();
+        Assert.assertTrue("Substring doesn't find",
+                actual_string.contains("hello") || actual_string.contains("Hello"));
+    }
+
 }
