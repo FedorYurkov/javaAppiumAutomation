@@ -11,7 +11,7 @@ public class MainClassTest {
     @Test
     public void testGetClassNumber() {
         MainClass obj = new MainClass();
-        Assert.assertTrue("Variable class_number != 20", obj.getClassNumber() == 20);
+        Assert.assertTrue("Variable class_number <= 45", obj.getClassNumber() > 45);
     }
 
     @Test
