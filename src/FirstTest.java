@@ -128,6 +128,23 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testCompareSearchFieldPlaceholderText() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+
+        assertElementHasText(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Search…",
+                "Text in search field doesn't much 'Search…'"
+        );
+    }
+
+
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -160,5 +177,11 @@ public class FirstTest {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.clear();
         return element;
+    }
+
+    private void assertElementHasText(By by, String expected_text, String error_message) {
+        WebElement element = waitForElementPresent(by, "Cannot find element by locator", 5);
+        String element_text = element.getAttribute("text");
+        Assert.assertEquals(error_message, expected_text, element_text);
     }
 }
