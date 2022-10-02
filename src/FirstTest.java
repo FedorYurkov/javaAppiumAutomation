@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 public class FirstTest {
 
@@ -181,6 +182,38 @@ public class FirstTest {
                 "There are some search results on the page",
                 5
         );
+    }
+    
+    @Test
+    public void verifySearchResults() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        List<WebElement> search_results = waitForElementsPresent(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Cannot find any search results",
+                15
+        );
+
+        for (WebElement element : search_results) {
+            String element_text = element.getAttribute("text");
+            String substring = "java";
+            Assert.assertTrue(
+                    "There is no 'Java' text in search result",
+                    element_text.toLowerCase(Locale.ROOT).contains(substring)
+                    );
+        }
+        
     }
 
 
