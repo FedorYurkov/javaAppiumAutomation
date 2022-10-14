@@ -5,14 +5,10 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.ScreenOrientation;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import sun.security.krb5.Asn1Exception;
 
 import java.net.URL;
 import java.util.List;
@@ -698,6 +694,35 @@ public class FirstTest {
     }
 
 
+    @Test
+    public void testAssertTitle() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find 'Object-oriented programming language' topic searching by Java",
+                15
+        );
+
+        Assert.assertTrue(
+                "Cannot find article title",
+                assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"))
+        );
+    }
+
+
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -712,6 +737,15 @@ public class FirstTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
         return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+    }
+
+    private Boolean assertElementPresent(By by) {
+        try {
+            driver.findElement(by);
+            return Boolean.TRUE;
+        } catch(NoSuchElementException e) {
+            return Boolean.FALSE;
+        }
     }
 
     private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
