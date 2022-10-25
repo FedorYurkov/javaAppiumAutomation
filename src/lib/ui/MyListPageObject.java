@@ -1,13 +1,16 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.openqa.selenium.By;
 
 public class MyListPageObject extends MainPageObject {
 
     public static final String
             FOLDER_BY_NAME_TPL = "//*[@text='{FOLDER_NAME}']",
-            ARTICLE_BY_TITLE_TPL = "//*[@text='{TITLE}']";
+            ARTICLE_BY_TITLE_TPL = "//*[@text='{TITLE}']",
+            ARTICLES_ITEMS_IN_LIST = "org.wikipedia:id/page_list_item_container",
+            ARTICLES_IN_LIST_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']";
 
     /*TEMPLATES METHODS*/
     private static String getFolderXpathByName(String article_title) {
@@ -16,6 +19,10 @@ public class MyListPageObject extends MainPageObject {
 
     private static String getSavedArticleXpathByTitle(String name_of_folder) {
         return ARTICLE_BY_TITLE_TPL.replace("{TITLE}", name_of_folder);
+    }
+
+    private static String getArticleInListXpathBySubstring(String substring) {
+        return ARTICLES_IN_LIST_TPL.replace("{SUBSTRING}", substring);
     }
     /*TEMPLATES METHODS*/
 
@@ -61,5 +68,19 @@ public class MyListPageObject extends MainPageObject {
         );
 
         this.waitForArticleToDisappearByTitle(article_title);
+    }
+
+    public int getAmountOfArticlesInList() {
+        return this.getAmountOfElements(By.id(ARTICLES_ITEMS_IN_LIST));
+    }
+
+    public void openArticleFromListBySubstring(String substring) {
+        String articleLocator = getArticleInListXpathBySubstring(substring);
+
+        this.waitForElementAndClick(
+                By.xpath(articleLocator),
+                "Cannot find 'general-purpose programming language' topic searching by Python",
+                15
+        );
     }
 }

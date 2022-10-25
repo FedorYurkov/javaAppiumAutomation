@@ -3,7 +3,9 @@ package tests;
 import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.SearchPageObject;
+import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 public class ArticleTests extends CoreTestCase {
 
@@ -38,5 +40,21 @@ public class ArticleTests extends CoreTestCase {
 
         ArticlePageObject.waitForTitleElement();
         ArticlePageObject.swipeToFooter();
+    }
+
+    @Test
+    public void testAssertTitle() {
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Java");
+        SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+
+        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+
+        assertTrue(
+                "Cannot find article title",
+                ArticlePageObject.isTitleElementPresent()
+        );
     }
 }

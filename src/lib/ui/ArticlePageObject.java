@@ -16,14 +16,25 @@ public class ArticlePageObject extends MainPageObject {
             ADD_TO_MY_LIST_OVERLAY = "org.wikipedia:id/onboarding_button",
             MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
             MY_LIST_OK_BUTTON = "//*[@text='OK']",
+            MY_LIST_EXISTED_FOLDER = "//android.widget.TextView[@text='{FOLDER_NAME}']",
             CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
     }
 
+    /*TEMPLATES METHODS*/
+    private static String getExistedFolderElement(String substring) {
+        return MY_LIST_EXISTED_FOLDER.replace("{FOLDER_NAME}", substring);
+    }
+    /*TEMPLATES METHODS*/
+
     public WebElement waitForTitleElement() {
         return this.waitForElementPresent(By.id(TITLE), "Cannot find article title on page!", 15);
+    }
+
+    public Boolean isTitleElementPresent() {
+        return this.assertElementPresent(By.id(TITLE));
     }
 
     public String getArticleTitle() {
@@ -74,6 +85,32 @@ public class ArticlePageObject extends MainPageObject {
                 "Cannot press OK button",
                 5
         );
+    }
+
+    public void addArticleToExistedList(String name_of_folder) throws InterruptedException {
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_BUTTON),
+                "Cannot find button to open article options",
+                5
+        );
+
+        sleep(500);
+
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_ADD_TO_MY_LIST_BUTTON),
+                "Cannot find options to Add article to reading list",
+                5
+        );
+
+        String existed_folder_xpath = getExistedFolderElement(name_of_folder);
+
+
+        this.waitForElementAndClick(
+                By.xpath(existed_folder_xpath),
+                "Cannot find options to Add article to reading list",
+                5
+        );
+
     }
 
     public void closeArticle() {

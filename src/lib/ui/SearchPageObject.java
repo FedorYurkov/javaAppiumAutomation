@@ -1,7 +1,11 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 public class SearchPageObject extends MainPageObject {
 
@@ -11,7 +15,9 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
-            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']";
+            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']",
+            SEARCH_RESULTS_ITEMS = "org.wikipedia:id/page_list_item_container",
+            SEARCH_RESULTS_ITEMS_TITLE = "org.wikipedia:id/page_list_item_title";
 
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
@@ -70,5 +76,34 @@ public class SearchPageObject extends MainPageObject {
 
     public void assertThereIsNoResultOfSearch() {
         this.assertElementNotPresent(By.xpath(SEARCH_RESULT_ELEMENT), "We supposed not to find any results");
+    }
+
+    public String getSearchFieldText() {
+        WebElement element = this.waitForElementPresent(By.xpath(SEARCH_INPUT), "Cannot find search field", 15);
+        return element.getAttribute("text");
+    }
+
+    public List<WebElement> getSearchResultsItems() {
+        return this.waitForElementsPresent(
+                By.id(SEARCH_RESULTS_ITEMS),
+                "Cannot find any search results",
+                15
+        );
+    }
+
+    public List<WebElement> getSearchResultsItemsTitles() {
+        return this.waitForElementsPresent(
+                By.id(SEARCH_RESULTS_ITEMS_TITLE),
+                "Cannot find any search results",
+                15
+        );
+    }
+
+    public void waitForSearchResultsItemsNotPresent() {
+        this.waitForElementNotPresent(
+                By.id(SEARCH_RESULTS_ITEMS),
+                "There are some search results on the page",
+                5
+        );
     }
 }
